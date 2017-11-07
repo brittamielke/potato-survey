@@ -3,12 +3,12 @@ package com.libertymutual.gofocode.hello_world_again.controllers;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import com.libertymutual.gofocode.hello_world_again.models.SurveyResults;
 
 @Controller
 public class HomeController {
-	private int russetCount;
-	private int goldenCount;
-	private int sweetCount;
+
+	private SurveyResults results = new SurveyResults();
 
 	@RequestMapping("/")
 	public String defaultPage() {
@@ -26,23 +26,24 @@ public class HomeController {
 
 	@RequestMapping("/survey")
 	public ModelAndView survey(String answer) {
-		ModelAndView mashed = new ModelAndView();
-		mashed.setViewName("results");
-		mashed.addObject("userResponse", answer);
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("results");
+		mv.addObject("userResponse", answer);
 
 		if (answer.equals("Sweet")) {
-			sweetCount = sweetCount + 1;
+			results.registerSweetVote();
+
 		}
 		if (answer.equals("Russet")) {
-			russetCount = russetCount + 1;
-		} 
-		if (answer.equals("Golden")) {
-			goldenCount = goldenCount + 1;
+			results.registerRussetVote();
+
 		}
-		mashed.addObject("sweetCount", sweetCount);
-		mashed.addObject("russetCount", russetCount);
-		mashed.addObject("goldenCount", goldenCount);
-	
-		return mashed;
+		if (answer.equals("Golden")) {
+			results.registerGoldenVote();
+
+		}
+		mv.addObject("results", results);
+
+		return mv;
 	}
 }
